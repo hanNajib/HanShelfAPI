@@ -2,22 +2,55 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function run()
     {
-        // User::factory(10)->create();
+        // Seed users
+        DB::table('users')->insert([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Seed books
+        DB::table('books')->insert([
+            [
+                'title' => 'Book One',
+                'author' => 'Author One',
+                'stock' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Book Two',
+                'author' => 'Author Two',
+                'stock' => 5,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Add more books as needed
+        ]);
+
+        // Seed loans
+        DB::table('loans')->insert([
+            [
+                'book_id' => 1,
+                'member_id' => 1,
+                'loan_date' => now(),
+                'due_date' => now()->addDays(14),
+                'status' => 'borrowed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            // Add more loans as needed
         ]);
     }
 }
