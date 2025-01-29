@@ -14,7 +14,9 @@ class BookController extends Controller
         $validate = $this->ReqValidate($req, [
             'title' => 'required',
             'author' => 'required',
-            'genre' => 'required',
+            'genre' => 'nullable',
+            'publisher' => 'nullable',
+            'shelf_id' => 'nullable|exists:shelf,id',
             'published_year' => 'required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'stock' => 'required|integer'
         ]);
@@ -30,6 +32,8 @@ class BookController extends Controller
                 'title' => $req->title,
                 'author' => $req->author,
                 'genre' => $req->genre,
+                'publisher' => $req->publisher,
+                'shelf_id' => $req->shelf_id,
                 'published_year' => $req->published_year,
                 'stock' => $req->stock
             ]);
@@ -94,6 +98,8 @@ class BookController extends Controller
             'title' => 'sometimes|required',
             'author' => 'sometimes|required',
             'genre' => 'sometimes|required',
+            'shelf_id' => 'nullable|exists:shelf,id',
+            'publisher' => 'sometimes|required',
             'published_year' => 'sometimes|required|digits:4|integer|min:1900|max:'.(date('Y')+1),
             'stock' => 'sometimes|required|integer'
         ]);
@@ -106,7 +112,7 @@ class BookController extends Controller
             DB::beginTransaction();
 
             $book = Books::findOrFail($id);
-            $book->update($req->only(['title', 'author', 'genre', 'published_year', 'stock']));
+            $book->update($req->only(['title', 'author', 'genre', 'shelf_id', 'published_year', 'publisher', 'stock']));
 
             DB::commit();
 
@@ -140,5 +146,27 @@ class BookController extends Controller
                 'message' => 'Delete Book Failed'
             ], 400);
         }
+    }
+
+    public function search(Request $req) {
+        $q = $req->input('_q');
+
+        $validate = $this->ReqValidate($req, [
+            '_q' => 'required|string|min:1'
+        ]);
+
+        if($validate) {
+            return $validate;
+        }
+
+        $books = Books::where('title', 'LIKE', "%{$q}%")
+            ->orWhere('author', 'LIKE', "%{$q}%")
+            ->orWhere('genre', 'LIKE', "%{$q}%")
+            ->get();
+
+        return response()->json([
+            'message' => 'Books retrieved successfully',
+            'data' => $books
+        ]);
     }
 }

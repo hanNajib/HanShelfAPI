@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Books;
 use App\Models\Loan;
+use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -104,6 +105,90 @@ class LoansController extends Controller
             DB::rollBack();
             return response()->json([
                 'message' => 'Book failed to return',
+                'errors' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function history(Request $req) {
+        $page = $req->input('page') ?? 0;
+        $size = $req->input('size') ?? 10;
+
+        $validate = $this->ReqValidate($req, [
+            'page' => 'integer|min:0',
+            'size' => 'integer|min:1'
+        ]);
+
+        if($validate) {
+            return $validate;
+        }
+
+        $loan = Loan::skip($page * $size)->take($size)->get();
+
+        return response()->json([
+            'message' => 'Loan History Successfully retrieved',
+            'page' => $page,
+            'size' => $size,
+            'data' => $loan
+        ]);
+
+    }
+
+    public function userHistory(Request $req, $id) {
+        $page = $req->input('page') ?? 0;
+        $size = $req->input('size') ?? 10;
+
+        $validate = $this->ReqValidate($req, [
+            'page' => 'integer|min:0',
+            'size' => 'integer|min:1'
+        ]);
+
+        if($validate) {
+            return $validate;
+        }
+
+        try {
+            $user = User::findOrFail($id);
+            $loan = Loan::where('member_id', $user->id)->skip($page * $size)->take($size)->get();
+        return response()->json([
+            'message' => 'Loan History Successfully retrieved',
+            'page' => $page,
+            'size' => $size,
+            'data' => $loan
+        ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Loan History Failed retrieved',
+                'errors' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function selfHistory(Request $req) {
+        $page = $req->input('page') ?? 0;
+        $size = $req->input('size') ?? 10;
+        $user = Auth::user();
+
+        $validate = $this->ReqValidate($req, [
+            'page' => 'integer|min:0',
+            'size' => 'integer|min:1'
+        ]);
+
+        if($validate) {
+            return $validate;
+        }
+
+        try {
+            $loan = Loan::where('member_id', $user->id)->skip($page * $size)->take($size)->get();
+        return response()->json([
+            'message' => 'Loan History Successfully retrieved',
+            'page' => $page,
+            'size' => $size,
+            'data' => $loan
+        ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Loan History Failed retrieved',
                 'errors' => $e->getMessage()
             ], 400);
         }

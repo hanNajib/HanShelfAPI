@@ -9,13 +9,14 @@
 
 # HanShelfAPI
 
-HanShelfAPI is a library management system built with Laravel. It allows users to manage books, loans, and view statistics about the most popular books.
+HanShelfAPI is a library management system built with Laravel. It allows users to manage books, loans, shelves, and view statistics about the most popular books.
 
 ## Features
 
 - User authentication (register, login, logout)
 - Book management (add, update, delete, view books)
 - Loan management (borrow and return books)
+- Shelf management (add, update, delete, view shelves and their books)
 - Statistics (view most popular books)
 
 ## Installation
@@ -67,14 +68,29 @@ HanShelfAPI is a library management system built with Laravel. It allows users t
 ### Books
 
 - `GET /api/books` - Get all books (requires authentication)
-- `POST /api/books` - Add a new book (requires authentication)
-- `PUT /api/books/{id}` - Update a book (requires authentication)
-- `DELETE /api/books/{id}` - Delete a book (requires authentication)
+- `POST /api/books` - Add a new book (requires authentication and admin role)
+- `PUT /api/books/{id}` - Update a book (requires authentication and admin role)
+- `DELETE /api/books/{id}` - Delete a book (requires authentication and admin role)
+- `GET /api/books/search` - Search for books (requires authentication)
 
 ### Loans
 
 - `POST /api/loans` - Borrow a book (requires authentication)
 - `POST /api/loans/{id}/return` - Return a borrowed book (requires authentication)
+- `GET /api/loans/history/all` - Get all loan history (requires authentication and admin role)
+
+### Users
+
+- `GET /api/users/{id}/loans` - Get loan history of a specific user (requires authentication)
+- `GET /api/users/loans` - Get loan history of the authenticated user (requires authentication)
+
+### Shelves
+
+- `GET /api/shelf` - Get all shelves (requires authentication)
+- `POST /api/shelf` - Add a new shelf (requires authentication and admin role)
+- `PUT /api/shelf/{id}` - Update a shelf (requires authentication and admin role)
+- `DELETE /api/shelf/{id}` - Delete a shelf (requires authentication and admin role)
+- `GET /api/shelf/{id}/books` - Get books in a specific shelf (requires authentication)
 
 ### Statistics
 

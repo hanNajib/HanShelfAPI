@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('author');
-            $table->string('genre');
+            $table->string('genre')->nullable();
+            $table->string('publisher')->nullable();
+            $table->foreignId('shelf_id')->nullable()->constrained('shelf')->onDelete('set null');
             $table->integer('published_year');
             $table->softDeletes();
             $table->integer('stock');
