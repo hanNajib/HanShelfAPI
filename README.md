@@ -23,7 +23,7 @@ HanShelfAPI is a library management system built with Laravel. It allows users t
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/HanShelfAPI.git
+    git clone https://github.com/hanNajib/HanShelfAPI.git
     cd HanShelfAPI
     ```
 
