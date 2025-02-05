@@ -10,7 +10,7 @@
 <h1 align="center">HanShelfAPI</h1>
 
 <p align="center">
-<img src="https://img.icons8.com/ios-filled/100/000000/books.png" alt="Books Icon"/>
+<img src="https://img.icons8.com/ios-filled/100/ffffff/books.png" alt="Books Icon"/>
 </p>
 
 <p align="center">
