@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Books;
 use App\Models\Loan;
 use App\Models\User;
+use App\Services\ResponseService;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,15 +27,11 @@ class LoansController extends Controller
 
         $book = Books::find($req->book_id)->first();
         if(!$book) {
-            return response()->json([
-                'message' => 'Book not found'
-            ], 404);
+            ResponseService::message('Book not found', 404);
         }
         
         if($book->stock <= 0) {
-            return response()->json([
-                'message' => 'No Stock'
-            ], 404);
+            ResponseService::message('No Stock', 404);
         }
 
         try {
@@ -52,25 +49,17 @@ class LoansController extends Controller
             ]);
 
             DB::commit();
-            return response()->json([
-                'message' => 'Borrowing successfully',
-                'data' => $loan
-            ], 200);
+            return ResponseService::success('Borrowing successfully', 200, $loan);
         } catch (Throwable $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Borrowing failed',
-                'errors' => $e->getMessage()
-            ], 400);
+            return ResponseService::error('Borrowing failed', 400, $e->getMessage());
         }
     }
 
     public function bookReturn(Request $req, $id) {
         $loan = Loan::find($id);
         if(!$loan || $loan->status == 'returned') {
-            return response()->json([
-                'message' => 'Loan not found'
-            ], 404);
+            return ResponseService::message('Loan not found', 404);
         }
 
         try {
@@ -92,21 +81,14 @@ class LoansController extends Controller
             $late = $today > $dueDate ? date_diff($dueDate, $today)->days : 0;
 
             DB::commit();
-
-            return response()->json([
-                'message' => 'Book returned successfully',
-                'data' => [
-                    'id' => $loan->id,
-                    'status' => $loan->status,
-                    'late_days' => $late
-                ]
+            return ResponseService::success('Book returned successfully', 200, [
+                'id' => $loan->id,
+                'status' => $loan->status,
+                'late_days' => $late
             ]);
         } catch (Throwable $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Book failed to return',
-                'errors' => $e->getMessage()
-            ], 400);
+            return ResponseService::error('Book failed to return', 400, $e->getMessage());
         }
     }
 
@@ -157,10 +139,7 @@ class LoansController extends Controller
             'data' => $loan
         ]);
         } catch (\Throwable $e) {
-            return response()->json([
-                'message' => 'Loan History Failed retrieved',
-                'errors' => $e->getMessage()
-            ], 400);
+            return ResponseService::error('Loan History Failed retrieved', 400, $e->getMessage());
         }
     }
 
@@ -187,10 +166,7 @@ class LoansController extends Controller
             'data' => $loan
         ]);
         } catch (\Throwable $e) {
-            return response()->json([
-                'message' => 'Loan History Failed retrieved',
-                'errors' => $e->getMessage()
-            ], 400);
+            return ResponseService::error('Loan History Failed retrieved', 400, $e->getMessage());
         }
     }
 }

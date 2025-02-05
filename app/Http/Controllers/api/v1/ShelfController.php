@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Books;
 use App\Models\Shelf;
+use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,15 +26,10 @@ class ShelfController extends Controller
             $shelf = Shelf::create($req->all());
 
             DB::commit();
-            return response()->json([
-                'message' => 'Shelf stored successfully'
-            ], 201);
+            return ResponseService::success("Shelf stored successfully", 201, $shelf);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Shelf failed to save',
-                'errors' => $th->getMessage()
-            ], 400);
+            return ResponseService::error('Shelf failed to update', 400, $th->getMessage());
         }
     }
 
@@ -48,15 +44,10 @@ class ShelfController extends Controller
             DB::beginTransaction();
             $shelf->delete();
             DB::commit();
-            return response()->json([
-                'message' => 'Shelf Deleted Successfully',
-            ], 204);
+            return ResponseService::message('Shelf deleted successfully', 200);
         } catch (\Throwable $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Shelf failed to delete',
-                'errors' => $e->getMessage()
-            ], 400);
+            return ResponseService::error('Shelf failed to delete', 400, $e->getMessage());
         }
     }
 
@@ -81,24 +72,16 @@ class ShelfController extends Controller
             
             $shelf->update($req->all());
             DB::commit();
-            return response()->json([
-                'message' => 'Shelf updated successfully'
-            ]);
+            return ResponseService::message('Shelf updated successfully', 200);
         } catch (\Throwable $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Shelf failed to update',
-                'errors' => $e->getMessage()
-            ], 400);
+            return ResponseService::error('Shelf failed to update', 400, $e->getMessage());
         }
     }
 
     public function get(Request $req) {
         $shelf = Shelf::select(['id', 'name'])->get();
-        return response()->json([
-            'message' => 'Shelf successfully retrieved',
-            'data' => $shelf
-        ]);
+        return ResponseService::success('Shelf successfully retrieved', 200, $shelf);
     }
 
     public function getBook(Request $req, $id) {

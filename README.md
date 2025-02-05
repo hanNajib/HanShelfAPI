@@ -7,58 +7,60 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-<h1 align="center">HanShelfAPI</h1>
+# HanShelfAPI
 
+<<<<<<< Updated upstream
 <p align="center">
 <img src="https://img.icons8.com/ios-filled/100/ffffff/books.png" alt="Books Icon"/>
 </p>
 
 <p align="center">
+=======
+>>>>>>> Stashed changes
 HanShelfAPI is a REST API management system built with Laravel and Sanctum for authentication. It allows users to manage books, loans, shelves, and view statistics about the most popular books.
-</p>
 
 ## Features
 
-- 📚 **Book Management**: Add, update, delete, and view books.
-- 🔐 **User Authentication**: Register, login, and logout.
-- 📖 **Loan Management**: Borrow and return books.
-- 🗄️ **Shelf Management**: Add, update, delete, and view shelves and their books.
-- 📊 **Statistics**: View the most popular books.
+- User authentication (register, login, logout)
+- Book management (add, update, delete, view books)
+- Loan management (borrow and return books)
+- Shelf management (add, update, delete, view shelves and their books)
+- Statistics (view most popular books)
 
 ## Installation
 
-1. **Clone the repository**:
+1. Clone the repository:
     ```sh
     git clone https://github.com/hanNajib/HanShelfAPI.git
     cd HanShelfAPI
     ```
 
-2. **Install dependencies**:
+2. Install dependencies:
     ```sh
     composer install
     ```
 
-3. **Copy the `.env.example` file to `.env` and configure your environment variables**:
+3. Copy the `.env.example` file to `.env` and configure your environment variables:
     ```sh
     cp .env.example .env
     ```
 
-4. **Generate an application key**:
+4. Generate an application key:
     ```sh
     php artisan key:generate
     ```
 
-5. **Run the migrations**:
+5. Run the migrations:
     ```sh
     php artisan migrate
     ```
 
-6. **Seed the database (optional)**:
+6. Seed the database (optional):
     ```sh
     php artisan db:seed
     ```
 
-7. **Start the development server**:
+7. Start the development server:
     ```sh
     php artisan serve
     ```

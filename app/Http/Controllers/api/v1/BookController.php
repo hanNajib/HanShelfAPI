@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Books;
+use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -40,16 +41,10 @@ class BookController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'message' => 'Book Created Successfully',
-                'data' => $book
-            ], 201);
+            return ResponseService::success('Book created successfully', 201, $book);
         } catch (Throwable $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Book Create Failed',
-                'errors' => $e->getMessage() 
-            ], 400);
+            return ResponseService::error('Book failed to create', 400, $e->getMessage());
         }
     }
 
@@ -116,35 +111,23 @@ class BookController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'message' => 'Book Updated Successfully',
-                'data' => $book
-            ], 200);
+            return ResponseService::success('Book updated successfully', 200, $book);
         } catch (Throwable $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Book Update Failed',
-                'errors' => $e->getMessage()
-            ], 400);
+            return ResponseService::error('Book update failed', 400, $e->getMessage());
         }
     }
 
     public function delete(Request $req, $id) {
         $book = Books::find($id);
         if(!$book) {
-            return response()->json([
-                'message' => 'Book not found'
-            ], 404);
+            return ResponseService::message('Book not found', 404);
         }
         try {
             $book->delete();
-            return response()->json([
-                'message' => 'Book deleted successfully'
-            ], 200);
+            return ResponseService::message('Book deleted successfully', 200);
         } catch(Throwable $e) {
-            return response()->json([
-                'message' => 'Delete Book Failed'
-            ], 400);
+            return ResponseService::error('Book failed to delete', 400, $e->getMessage());
         }
     }
 
@@ -164,9 +147,6 @@ class BookController extends Controller
             ->orWhere('genre', 'LIKE', "%{$q}%")
             ->get();
 
-        return response()->json([
-            'message' => 'Books retrieved successfully',
-            'data' => $books
-        ]);
+        return ResponseService::success('Book retrieved successfully', 299, $books);
     }
 }
