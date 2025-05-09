@@ -110,3 +110,4 @@ Thank you for considering contributing to HanShelfAPI! Please follow the [contri
 ## License
 
 HanShelfAPI is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
